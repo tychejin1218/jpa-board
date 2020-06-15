@@ -35,11 +35,12 @@ public class UserController {
 			return "redirect:/users/loginForm";
 		}
 
-		if (!password.equals(user.getPassword())) {
+		if (!user.matchPassword(password)) {
 			System.out.println("Loing Failure! Password does not match.");
 			return "redirect:/users/loginForm";
 		}
-		session.setAttribute("sessionedUser", user);
+		session.setAttribute("test1", user);
+		session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
 
 		return "redirect:/";
 	}
@@ -47,7 +48,7 @@ public class UserController {
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 
-		session.removeAttribute("sessionedUser");
+		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
 
 		return "redirect:/";
 	}
@@ -72,14 +73,13 @@ public class UserController {
 
 	@GetMapping("/{id}/form")
 	public String updateForm(HttpSession session, @PathVariable Long id, Model model) {
-
-		Object tempUser = session.getAttribute("sessionedUser");
-		if (tempUser == null) {
+		
+		if (!HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/loginForm";
 		}
 
-		User sessionedUser = (User) tempUser;
-		if (!id.equals(sessionedUser.getId())) {
+		User sessionedUser = HttpSessionUtils.getUserFromSession(session);
+		if (!sessionedUser.matchId(id)) {
 			throw new IllegalStateException("It's the wrong approach.");
 		}
 
@@ -97,13 +97,12 @@ public class UserController {
 	@PostMapping("/{id}")
 	public String update(HttpSession session, @PathVariable Long id, User updatedUser) {
 
-		Object tempUser = session.getAttribute("sessionedUser");
-		if (tempUser == null) {
+		if (!HttpSessionUtils.isLoginUser(session)) {
 			return "redirect:/users/loginForm";
 		}
 
-		User sessionedUser = (User) tempUser;
-		if (!id.equals(sessionedUser.getId())) {
+		User sessionedUser = HttpSessionUtils.getUserFromSession(session);
+		if (!sessionedUser.matchId(id)) {
 			throw new IllegalStateException("It's the wrong approach.");
 		}
 

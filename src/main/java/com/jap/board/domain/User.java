@@ -25,6 +25,14 @@ public class User {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	public boolean matchId(Long newId) {
+		if(newId == null) {
+			return false;
+		}
+		
+		return newId.equals(id);
+	}
 
 	public String getUserId() {
 		return userId;
@@ -32,6 +40,14 @@ public class User {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public boolean matchPassword(String newPassword) {		
+		if (newPassword == null) {
+			return false;
+		}
+
+		return newPassword.equals(password);
 	}
 
 	public String getPassword() {
