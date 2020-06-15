@@ -11,9 +11,9 @@ public class User {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
-	@Column(nullable = false, length = 20)	
-	private String userId;	
+
+	@Column(nullable = false, length = 20)
+	private String userId;
 	private String password;
 	private String name;
 	private String email;
@@ -55,7 +55,7 @@ public class User {
 		this.name = newUser.name;
 		this.email = newUser.email;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
