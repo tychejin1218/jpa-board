@@ -39,9 +39,16 @@ public class UserController {
 			System.out.println("Loing Failure! Password does not match.");
 			return "redirect:/users/loginForm";
 		}
-		System.out.println("User : " + user);
 		session.setAttribute("user", user);
 
+		return "redirect:/";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		
+		session.removeAttribute("user");
+		
 		return "redirect:/";
 	}
 
