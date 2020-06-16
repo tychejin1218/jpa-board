@@ -18,8 +18,8 @@
                           	</strong>
                           	<div class="auth-info">
                             	<i class="icon-add-comment"></i>
-                              	<span class="time">-</span>
-                              	<a href="./user/profile.html" class="author">{{writer}}</a>
+                              	<span class="time">{{formattedCreateDate}}</span>
+                              	<a href="./user/profile.html" class="author">{{writer.userId}}</a>
                           	</div>
                           	<div class="reply" title="댓글">
                               	<i class="icon-reply"></i>
@@ -30,6 +30,23 @@
             	</li>
           		{{/questions}}
 			</ul>
+			<div class="row">
+              <div class="col-md-3"></div>
+              <div class="col-md-6 text-center">
+                  <ul class="pagination center-block" style="display:inline-block;">
+                      <li><a href="#">«</a></li>
+                      <li><a href="#">1</a></li>
+                      <li><a href="#">2</a></li>
+                      <li><a href="#">3</a></li>
+                      <li><a href="#">4</a></li>
+                      <li><a href="#">5</a></li>
+                      <li><a href="#">»</a></li>
+                </ul>
+              </div>
+              <div class="col-md-3 qna-write">
+                  <a href="/questions/form" class="btn btn-primary pull-right" role="button">질문하기</a>
+              </div>
+          </div>
         </div>
     </div>
 </div>

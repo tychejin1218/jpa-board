@@ -37,7 +37,7 @@ public class QuestionController {
 		}
 
 		User sessionUser = HttpSessionUtils.getUserFromSession(session);
-		Question question = new Question(sessionUser.getUserId(), title, contents);
+		Question question = new Question(sessionUser, title, contents);
 		
 		System.out.println("question : " + question);
 		questionRepository.save(question);
