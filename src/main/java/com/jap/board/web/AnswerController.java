@@ -1,5 +1,7 @@
 package com.jap.board.web;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +35,12 @@ public class AnswerController {
 
 		User loginUser = HttpSessionUtils.getUserFromSession(session);
 
-		Question question = questionRepository.findById(questionId)
-		                                      .get();
-
+		Question question = new Question();		
+		Optional<Question> optionalQuestion = questionRepository.findById(questionId);
+		if(optionalQuestion.isPresent()) {
+			question = optionalQuestion.get();
+		}
+		
 		Answer answer = new Answer(loginUser, question, contents);
 
 		answerRepository.save(answer);

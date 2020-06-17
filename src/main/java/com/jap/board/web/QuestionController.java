@@ -1,5 +1,7 @@
 package com.jap.board.web;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jap.board.domain.Question;
 import com.jap.board.domain.QuestionRepository;
+import com.jap.board.domain.Result;
 import com.jap.board.domain.User;
 
 @Controller
@@ -41,9 +44,9 @@ public class QuestionController {
 		}
 
 		User sessionUser = HttpSessionUtils.getUserFromSession(session);
+
 		Question question = new Question(sessionUser, title, contents);
 
-		System.out.println("question : " + question);
 		questionRepository.save(question);
 
 		return "redirect:/";
@@ -52,25 +55,33 @@ public class QuestionController {
 	@GetMapping("/{id}")
 	public String show(@PathVariable Long id, Model model) {
 
-		model.addAttribute("question", questionRepository.findById(id)
-		                                                 .get());
+		Question question = new Question();
+		Optional<Question> optionalQuestion = questionRepository.findById(id);
+		if (optionalQuestion.isPresent()) {
+			question = optionalQuestion.get();
+		}
+
+		model.addAttribute("question", question);
+
 		return "/qna/show";
 	}
 
 	@GetMapping("/{id}/form")
 	public String updateForm(@PathVariable Long id, Model model, HttpSession session) {
 
-		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/loginForm";
+		Result result = new Result();
+
+		Question question = new Question();
+		Optional<Question> optionalQuestion = questionRepository.findById(id);
+		if (optionalQuestion.isPresent()) {
+			question = optionalQuestion.get();
 		}
 
-		User loginUser = HttpSessionUtils.getUserFromSession(session);
+		result = valid(session, question);
 
-		Question question = questionRepository.findById(id)
-		                                      .get();
-
-		if (!question.isSameWriter(loginUser)) {
-			return "/users/loginForm";
+		if (!result.isValid()) {
+			model.addAttribute("errorMessage", result.getErrorMessage());
+			return "/user/login";
 		}
 
 		model.addAttribute("question", question);
@@ -79,21 +90,25 @@ public class QuestionController {
 	}
 
 	@PutMapping("/{id}")
-	public String update(@PathVariable Long id, String title, String contents, HttpSession session) {
+	public String update(HttpSession session, @PathVariable Long id, String title, String contents, Model model) {
 
-		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/loginForm";
+		Result result = new Result();
+
+		Question question = new Question();
+		Optional<Question> optionalQuestion = questionRepository.findById(id);
+		if (optionalQuestion.isPresent()) {
+			question = optionalQuestion.get();
 		}
 
-		User loginUser = HttpSessionUtils.getUserFromSession(session);
+		result = valid(session, question);
 
-		Question question = questionRepository.findById(id)
-		                                      .get();
+		if (!result.isValid()) {
+			
+			model.addAttribute("errorMessage", result.getErrorMessage());
 
-		if (!question.isSameWriter(loginUser)) {
-			return "/users/loginForm";
+			return "/user/login";
 		}
-
+		
 		question.update(title, contents);
 
 		questionRepository.save(question);
@@ -102,23 +117,41 @@ public class QuestionController {
 	}
 
 	@DeleteMapping("/{id}")
-	public String delete(@PathVariable Long id, HttpSession session) {
+	public String delete(HttpSession session, @PathVariable Long id, Model model) {
 
-		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "/users/loginForm";
+		Result result = new Result();
+
+		Question question = new Question();
+		Optional<Question> optionalQuestion = questionRepository.findById(id);
+		if (optionalQuestion.isPresent()) {
+			question = optionalQuestion.get();
 		}
 
-		User loginUser = HttpSessionUtils.getUserFromSession(session);
+		result = valid(session, question);
 
-		Question question = questionRepository.findById(id)
-		                                      .get();
+		if (!result.isValid()) {
+			
+			model.addAttribute("errorMessage", result.getErrorMessage());
 
-		if (!question.isSameWriter(loginUser)) {
-			return "/users/loginForm";
+			return "/user/login";
 		}
-
+		
 		questionRepository.deleteById(id);
 
 		return "redirect:/";
+	}
+
+	private Result valid(HttpSession session, Question question) {
+
+		if (!HttpSessionUtils.isLoginUser(session)) {
+			return Result.fail("로그인이 필요합니다.");
+		}
+
+		User loginUser = HttpSessionUtils.getUserFromSession(session);
+		if (!question.isSameWriter(loginUser)) {
+			return Result.fail("자신이 쓴 글만 수정, 삭제가 가능합니다.");
+		}
+
+		return Result.ok();
 	}
 }

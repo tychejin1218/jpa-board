@@ -11,6 +11,7 @@ public class HttpSessionUtils {
 	public static boolean isLoginUser(HttpSession session) {
 
 		Object sessionedUser = session.getAttribute(USER_SESSION_KEY);
+		System.out.println(sessionedUser);
 		if (sessionedUser == null) {
 			return false;
 		}

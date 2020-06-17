@@ -1,5 +1,7 @@
 package com.jap.board.web;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,9 +86,12 @@ public class UserController {
 			throw new IllegalStateException("It's the wrong approach.");
 		}
 
-		User user = userRepository.findById(sessionedUser.getId())
-		                          .get();
-
+		User user = new User();		
+		Optional<User> optionalUser = userRepository.findById(sessionedUser.getId());
+		if(optionalUser.isPresent()) {
+			user = optionalUser.get();
+		}
+		
 		System.out.println("updateForm ==== S");
 		System.out.println(user);
 		System.out.println("updateForm ==== E");
@@ -107,8 +112,11 @@ public class UserController {
 			throw new IllegalStateException("It's the wrong approach.");
 		}
 
-		User user = userRepository.findById(sessionedUser.getId())
-		                          .get();
+		User user = new User();		
+		Optional<User> optionalUser = userRepository.findById(sessionedUser.getId());
+		if(optionalUser.isPresent()) {
+			user = optionalUser.get();
+		}
 
 		System.out.println("update ==== S");
 		System.out.println(user);

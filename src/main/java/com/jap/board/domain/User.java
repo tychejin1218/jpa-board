@@ -25,12 +25,12 @@ public class User {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public boolean matchId(Long newId) {
-		if(newId == null) {
+		if (newId == null) {
 			return false;
 		}
-		
+
 		return newId.equals(id);
 	}
 
@@ -42,7 +42,7 @@ public class User {
 		this.userId = userId;
 	}
 
-	public boolean matchPassword(String newPassword) {		
+	public boolean matchPassword(String newPassword) {
 		if (newPassword == null) {
 			return false;
 		}
@@ -81,11 +81,6 @@ public class User {
 	}
 
 	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -108,5 +103,10 @@ public class User {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
 	}
 }
