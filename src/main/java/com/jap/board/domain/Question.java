@@ -33,7 +33,7 @@ public class Question {
 	private LocalDateTime createDate;
 
 	@OneToMany(mappedBy = "question")
-	@OrderBy("id ASC")
+	@OrderBy("id DESC")
 	private List<Answer> answers;
 
 	public Long getId() {
