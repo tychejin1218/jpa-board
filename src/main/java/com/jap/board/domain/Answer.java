@@ -46,6 +46,10 @@ public class Answer {
 		this.createDate = LocalDateTime.now();
 	}
 	
+	public boolean isSameWriter(User loginUser) {
+		return loginUser.equals(this.writer);
+	}
+	
 	public String getFormattedCreateDate() {
 		if(createDate == null) {
 			return "";				
