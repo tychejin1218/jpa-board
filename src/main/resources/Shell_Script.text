@@ -1,0 +1,23 @@
+#!/bin/bash
+  
+echo "Welcome My Shell"
+
+TOMCAT_HOME=~/tomcat
+
+cd ~/jpa-board
+git pull
+
+./mvnw clean package
+
+cd $TOMCAT_HOME/bin
+./shutdown.sh
+
+cd $TOMCAT_HOME/webapps
+rm -rf ROOT
+
+mv ~/jpa-board/target/jpa-board-1.0/ $TOMCAT_HOME/webapps/ROOT/
+
+cd $TOMCAT_HOME/bin
+./startup.sh
+
+tail -500f $TOMCAT_HOME/logs/catalina.out
