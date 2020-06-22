@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 public class Question {
 
@@ -32,6 +34,9 @@ public class Question {
 
 	private LocalDateTime createDate;
 
+	@JsonProperty
+	private Integer countOfAnswer = 0;
+	
 	@OneToMany(mappedBy = "question")
 	@OrderBy("id DESC")
 	private List<Answer> answers;
@@ -107,6 +112,14 @@ public class Question {
 		return this.writer.equals(loginUser);
 	}
 
+	public void addAnswer() {
+		this.countOfAnswer += 1;
+	}
+	
+	public void deleteAnswer() {
+		this.countOfAnswer -= 1;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

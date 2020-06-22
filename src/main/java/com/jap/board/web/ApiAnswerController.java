@@ -37,36 +37,47 @@ public class ApiAnswerController {
 
 		User loginUser = HttpSessionUtils.getUserFromSession(session);
 
-		Question question = new Question();		
+		Question question = new Question();
 		Optional<Question> optionalQuestion = questionRepository.findById(questionId);
-		if(optionalQuestion.isPresent()) {
+		if (optionalQuestion.isPresent()) {
 			question = optionalQuestion.get();
 		}
-		
+
 		Answer answer = new Answer(loginUser, question, contents);
+		
+		question.addAnswer();
 
 		return answerRepository.save(answer);
 	}
-	
+
 	@DeleteMapping("{id}")
 	public Result delete(HttpSession session, @PathVariable Long questionId, @PathVariable Long id) {
-		
+
 		if (!HttpSessionUtils.isLoginUser(session)) {
 			return Result.fail("로그인 시 삭제가 가능합니다.");
 		}
-		
+
 		Answer answer = new Answer();
 		Optional<Answer> optionalAnswer = answerRepository.findById(id);
-		if(optionalAnswer.isPresent()) {
+		if (optionalAnswer.isPresent()) {
 			answer = optionalAnswer.get();
 		}
 		User loginUser = HttpSessionUtils.getUserFromSession(session);
 		if (!answer.isSameWriter(loginUser)) {
 			return Result.fail("자신의 글만 삭제할 수 있습니다.");
 		}
-		
+
 		answerRepository.delete(answer);
-		
+
+		Question question = new Question();
+		Optional<Question> optionalQuestion = questionRepository.findById(questionId);
+		if (optionalQuestion.isPresent()) {
+			question = optionalQuestion.get();
+		}
+		question.deleteAnswer();
+
+		questionRepository.save(question);
+
 		return Result.ok();
 	}
 }
