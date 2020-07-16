@@ -1,4 +1,4 @@
-## [SLiPP] Spring Boot, JPA로 질문/답변 게시판
+## Spring Boot, JPA로 질문/답변 게시판
 - #### 개요
   - ##### JPA로 질문/답변 게시판을 구현하는 과정
 
